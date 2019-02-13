@@ -1,0 +1,8 @@
+---
+- name: Include installation.yml
+  include: installation.yml
+  tags: [mongodb]
+
+- name: Include configuration.yml
+  include: configuration.yml
+  tags: [mongodb]

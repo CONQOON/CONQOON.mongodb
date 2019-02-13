@@ -1,0 +1,54 @@
+---
+mongodb_package: mongodb-org
+mongodb_major_version: "4.0"
+mongodb_apt_keyserver: keyserver.ubuntu.com
+mongodb_apt_key_id:
+  "3.2": "EA312927"
+  "3.4": "0C49F3730359A14518585931BC711F9BA15703C6"
+  "3.6": "2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5"
+  "4.0": "9DA31620334BD75D9DCB49F368818C72E52529D4"
+
+mongodb_user: "mongodb"
+mongodb_daemon_name: "mongod"
+
+mongodb_repository:
+  "3.2": "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/3.2 multiverse"
+  "3.4": "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/3.4 multiverse"
+  "3.6": "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/3.6 multiverse"
+  "4.0": "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/4.0 multiverse"
+
+mongodb_pymongo_pip_version: 3.6.1
+
+## storage Options
+mongodb_storage_dbpath: /data/db                 # Directory for datafiles
+# The storage engine for the mongod database. Available values:
+# 'mmapv1', 'wiredTiger'
+mongodb_storage_engine: "wiredTiger"
+
+mongodb_systemlog_destination: "file"
+mongodb_systemlog_logappend: true                                        # Append to logpath instead of over-writing
+mongodb_systemlog_logrotate: "rename"                                    # Logrotation behavior
+mongodb_systemlog_path: /var/log/mongodb/{{ mongodb_daemon_name }}.log   # Log file to send write to instead of stdout
+
+## net Options
+mongodb_net_bindip: 127.0.0.1                    # Comma separated list of ip addresses to listen on
+mongodb_net_http_enabled: false                  # Enable http interface
+mongodb_net_ipv6: false                          # Enable IPv6 support (disabled by default)
+mongodb_net_maxconns: 65536                      # Max number of simultaneous connections
+mongodb_net_port: 27017                          # Specify port number
+mongodb_net_ssl: disabled                        # Enable or disable ssl connections
+mongodb_net_ssl_mode:                            # Set the ssl mode (RequireSSL / PreferSSL / AllowSSL / disabled)
+mongodb_net_ssl_pemfile:                         # Location of the pemfile to use for ssl
+
+# mmapv1 specific options
+mongodb_storage_quota_enforced: false            # Limits each database to a certain number of files
+mongodb_storage_quota_maxfiles: 8                # Number of quota files per DB
+mongodb_storage_smallfiles: false                # Very useful for non-data nodes
+
+mongodb_storage_journal_enabled: true            # Enable journaling
+mongodb_storage_prealloc: true                   # Enable data file preallocation
+
+mongodb_security_authorization: "enabled"
+
+# setParameter config
+mongodb_set_parameters:
