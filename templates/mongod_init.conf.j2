@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 
 net:
-  bindIp: {{ mongodb_net_bindip }}
+  bindIp: '127.0.0.1'
   {% if mongodb_major_version is version_compare("3.6", "<") -%}
   http:
     enabled: {{ mongodb_net_http_enabled | to_nice_json }}
@@ -9,36 +9,18 @@ net:
   ipv6: {{ mongodb_net_ipv6 | to_nice_json }}
   maxIncomingConnections: {{ mongodb_net_maxconns }}
   port: {{ mongodb_net_port }}
-  {% if mongodb_net_ssl_pemfile is defined and mongodb_net_ssl_mode is defined and mongodb_net_ssl == 'enabled' -%}
-  ssl:
-    mode: {{ mongodb_net_ssl_mode }}
-    PEMKeyFile: {{ mongodb_net_ssl_pemfile }}
-  {% endif %}
 
 processManagement:
-  fork: {{ mongodb_processmanagement_fork | to_nice_json}}
+  fork: {{ mongodb_processmanagement_fork | to_nice_json }}
   {% if mongodb_pidfile_path is defined and mongodb_pidfile_path != '' -%}
   pidFilePath: {{ mongodb_pidfile_path }}
   {% endif %}
 
-{% if mongodb_replication_replset -%}
-replication:
-  oplogSizeMB: {{ mongodb_replication_oplogsize | int }}
-  replSetName: {{ mongodb_replication_replset }}
-  {% if mongodb_storage_engine == 'mmapv1' -%}
-  secondaryIndexPrefetch: {{ mongodb_replication_replindexprefetch }}
-  {% endif %}
-{% endif %}
-
 security:
-  authorization: {{ mongodb_security_authorization }}
-  {% if mongodb_replication_replset and mongodb_security_authorization == 'enabled' -%}
-  keyFile: {{ mongodb_security_keyfile }}
-  {% endif %}
+  authorization: 'disabled'
 
 storage:
   dbPath: {{ mongodb_storage_dbpath }}
-  directoryPerDB: {{ mongodb_storage_dirperdb | to_nice_json }}
   {% if mongodb_major_version is version_compare("3.0", ">=") -%}
   engine: {{ mongodb_storage_engine }}
   {% endif -%}
@@ -58,11 +40,4 @@ systemLog:
   logAppend: {{ mongodb_systemlog_logappend | to_nice_json }}
   logRotate: {{ mongodb_systemlog_logrotate }}
   path: {{ mongodb_systemlog_path }}
-  {% endif %}
-
-{% if mongodb_set_parameters -%}
-setParameter:
-  {% for key, value in mongodb_set_parameters.items() -%}
-  {{ key }}: {{ value }}
-  {% endfor -%}
-{% endif %}
+  {% endif -%}
